@@ -30,15 +30,15 @@ func (a *Agent) Draw(screen *ebiten.Image) {
 	cx := a.Location.X
 	cy := a.Location.Y
 
-	local := [3][2]float32{
-		{0, -size},            // Tip
-		{-size / 2, size / 2}, // Left
-		{size / 2, size / 2},  // Right
+	local := []Location{
+		{0, -size}, // Top
+		{-size * float32(math.Sin(math.Pi/3)), size / 2}, // left
+		{size * float32(math.Sin(math.Pi/3)), size / 2},  // right
 	}
 
 	vertices := make([]ebiten.Vertex, 3)
 	for i, pt := range local {
-		lx, ly := pt[0], pt[1]
+		lx, ly := pt.X, pt.Y
 		x := lx*cos - ly*sin + cx
 		y := lx*sin + ly*cos + cy
 
@@ -54,5 +54,8 @@ func (a *Agent) Draw(screen *ebiten.Image) {
 	whiteImg := ebiten.NewImage(1, 1)
 	whiteImg.Fill(color.White)
 
-	screen.DrawTriangles(vertices, indices, whiteImg, nil)
+	screen.DrawTriangles(vertices, indices, whiteImg, &ebiten.DrawTrianglesOptions{
+		Filter:    ebiten.FilterNearest,
+		AntiAlias: true,
+	})
 }
