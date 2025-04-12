@@ -14,12 +14,21 @@ func (g *Game) Update() error {
 	for _, agent := range g.state.agents {
 		agent.UpdateLocation()
 	}
+
+	for _, element := range g.state.elements {
+		element.UpdateLocation()
+	}
+
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	for _, agent := range g.state.agents {
 		agent.Draw(screen)
+	}
+
+	for _, element := range g.state.elements {
+		element.Draw(screen)
 	}
 }
 
@@ -32,6 +41,14 @@ func main() {
 	ebiten.SetWindowTitle("Hello, World!")
 	game := &Game{
 		state: GameState{
+			elements: []Element{
+				&Circle{
+					Location{
+						X: 800,
+						Y: 300,
+					},
+				},
+			},
 			agents: []Agent{
 				{
 					Location: &Location{

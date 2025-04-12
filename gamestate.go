@@ -6,5 +6,6 @@ type Location struct {
 }
 
 type GameState struct {
-	agents []Agent
+	agents   []Agent
+	elements []Element
 }
