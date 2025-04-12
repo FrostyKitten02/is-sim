@@ -8,19 +8,19 @@ type Location struct {
 type GameState struct {
 	Agents   *[]Agent
 	Elements *[]Element
-	target   *Location
+	target   *Vector
 
 	maxSpeed float32
 	maxForce float64
 }
 
 func (gs *GameState) InitGameState() {
-	gs.maxSpeed = 10
+	gs.maxSpeed = 8
 	//should be between 0 - sqrt(2)
 	gs.maxForce = 0.2
 
 	targetCircle := &Circle{
-		&Location{
+		&Vector{
 			X: 800,
 			Y: 300,
 		},
@@ -32,35 +32,19 @@ func (gs *GameState) InitGameState() {
 	}
 
 	gs.Agents = &[]Agent{
-		//{
-		//	Location: &Location{
-		//		X: 40,
-		//		Y: 40,
-		//	},
-		//	Direction: &Vector{
-		//		X: 0,
-		//		Y: 0,
-		//	},
-		//},
 		{
-			Location: &Location{
+			Location: &Vector{
 				X: 100,
 				Y: 500,
 			},
-			Direction: &Vector{
-				X: -1,
-				Y: -1,
+			Acceleration: &Vector{
+				X: 0,
+				Y: 0,
+			},
+			Velocity: &Vector{
+				X: 0,
+				Y: 0,
 			},
 		},
-		//{
-		//	Location: &Location{
-		//		X: 0,
-		//		Y: 0,
-		//	},
-		//	Direction: &Vector{
-		//		X: 0,
-		//		Y: 0,
-		//	},
-		//},
 	}
 }

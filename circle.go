@@ -7,7 +7,7 @@ import (
 )
 
 type Circle struct {
-	Location *Location
+	Location *Vector
 }
 
 func (p *Circle) UpdateLocation(gs *GameState) {
