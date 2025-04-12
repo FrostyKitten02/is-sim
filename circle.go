@@ -7,10 +7,10 @@ import (
 )
 
 type Circle struct {
-	Location Location
+	Location *Location
 }
 
-func (p *Circle) UpdateLocation() {
+func (p *Circle) UpdateLocation(gs *GameState) {
 	//NOT MOVING!
 }
 

@@ -1,9 +1,8 @@
 package main
 
 import (
-	"log"
-
 	"github.com/hajimehoshi/ebiten/v2"
+	"log"
 )
 
 type Game struct {
@@ -11,23 +10,23 @@ type Game struct {
 }
 
 func (g *Game) Update() error {
-	for _, agent := range g.state.agents {
-		agent.UpdateLocation()
+	for _, agent := range *g.state.Agents {
+		agent.UpdateLocation(g.state)
 	}
 
-	for _, element := range g.state.elements {
-		element.UpdateLocation()
+	for _, element := range *g.state.Elements {
+		element.UpdateLocation(g.state)
 	}
 
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	for _, agent := range g.state.agents {
+	for _, agent := range *g.state.Agents {
 		agent.Draw(screen)
 	}
 
-	for _, element := range g.state.elements {
+	for _, element := range *g.state.Elements {
 		element.Draw(screen)
 	}
 }
@@ -44,6 +43,7 @@ func main() {
 	}
 	game.state.InitGameState()
 
+	ebiten.SetTPS(30)
 	if err := ebiten.RunGame(game); err != nil {
 		log.Fatal(err)
 	}
