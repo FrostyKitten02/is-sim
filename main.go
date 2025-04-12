@@ -10,12 +10,6 @@ type Game struct {
 }
 
 func (g *Game) Update() error {
-	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
-		x, y := ebiten.CursorPosition()
-		g.state.target.Location.X = float32(x)
-		g.state.target.Location.Y = float32(y)
-	}
-
 	for _, agent := range *g.state.Agents {
 		agent.UpdateLocation(g.state)
 	}

@@ -12,6 +12,11 @@ type Circle struct {
 
 func (p *Circle) UpdateLocation(gs *GameState) {
 	//NOT MOVING!
+	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
+		x, y := ebiten.CursorPosition()
+		p.Location.X = float32(x)
+		p.Location.Y = float32(y)
+	}
 }
 
 func (p *Circle) Draw(screen *ebiten.Image) {
