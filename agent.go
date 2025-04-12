@@ -19,7 +19,7 @@ type Agent struct {
 
 // TODO check why when updating location and direction on agent values don't get updated out of scope, why are they not reflected in draw call
 func (a *Agent) UpdateLocation(gs *GameState) {
-	desired := SubVectors(*gs.target, *a.Location)
+	desired := SubVectors(*gs.target.Location, *a.Location)
 	desiredLimited := MagVec(desired, float64(gs.maxSpeed))
 
 	steer := SubVectors(desiredLimited, *a.Velocity)

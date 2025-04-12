@@ -8,7 +8,7 @@ type Location struct {
 type GameState struct {
 	Agents   *[]Agent
 	Elements *[]Element
-	target   *Vector
+	target   *Circle
 
 	maxSpeed float32
 	maxForce float64
@@ -25,7 +25,7 @@ func (gs *GameState) InitGameState() {
 			Y: 300,
 		},
 	}
-	gs.target = targetCircle.Location
+	gs.target = targetCircle
 
 	gs.Elements = &[]Element{
 		targetCircle,
