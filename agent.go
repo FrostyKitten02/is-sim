@@ -17,6 +17,20 @@ type Agent struct {
 	Velocity     *Vector
 }
 
+var mainColor = color.RGBA{
+	A: 0, //making invisible tail
+	R: 120,
+	G: 0,
+	B: 0,
+}
+
+var secondColor = color.RGBA{
+	A: 255,
+	R: 255,
+	G: 0,
+	B: 0,
+}
+
 // TODO check why when updating location and direction on agent values don't get updated out of scope, why are they not reflected in draw call
 func (a *Agent) UpdateLocation(gs *GameState) {
 	desired := SubVectors(*gs.target.Location, *a.Location)
@@ -46,7 +60,7 @@ func (a *Agent) ApplyForce(force Vector) {
 }
 
 func (a *Agent) Draw(screen *ebiten.Image) {
-	size := float32(10)
+	size := float32(12)
 
 	angle := math.Atan2(float64(a.Velocity.Y), float64(a.Velocity.X)) + math.Pi/2
 	cos := float32(math.Cos(angle))
@@ -54,24 +68,16 @@ func (a *Agent) Draw(screen *ebiten.Image) {
 	cx := a.Location.X
 	cy := a.Location.Y
 
-	local := []Location{
-		{0, -size}, // Top
-		{-size * float32(math.Sin(math.Pi/3)), size / 2}, // left
-		{size * float32(math.Sin(math.Pi/3)), size / 2},  // right
-	}
-
 	vertices := make([]ebiten.Vertex, 3)
-	for i, pt := range local {
-		lx, ly := pt.X, pt.Y
-		x := lx*cos - ly*sin + cx
-		y := lx*sin + ly*cos + cy
 
-		vertices[i] = ebiten.Vertex{
-			DstX:   x,
-			DstY:   y,
-			ColorR: 1, ColorG: 1, ColorB: 0, ColorA: 1,
-		}
-	}
+	ver1 := Vector{0, -size} // Top
+	vertices[0] = creteVertex(ver1.X, ver1.Y, sin, cos, cx, cy, secondColor)
+
+	ver2 := Vector{-size * float32(math.Sin(math.Pi/3)), size / 2} // left
+	vertices[1] = creteVertex(ver2.X, ver2.Y, sin, cos, cx, cy, mainColor)
+
+	ver3 := Vector{size * float32(math.Sin(math.Pi/3)), size / 2} // right
+	vertices[2] = creteVertex(ver3.X, ver3.Y, sin, cos, cx, cy, mainColor)
 
 	indices := []uint16{0, 1, 2}
 
@@ -82,4 +88,19 @@ func (a *Agent) Draw(screen *ebiten.Image) {
 		Filter:    ebiten.FilterNearest,
 		AntiAlias: true,
 	})
+}
+
+func creteVertex(lx float32, ly float32, sin float32, cos float32, cx float32, cy float32, color color.RGBA) ebiten.Vertex {
+	x := lx*cos - ly*sin + cx
+	y := lx*sin + ly*cos + cy
+
+	return ebiten.Vertex{
+		DstX: x,
+		DstY: y,
+
+		ColorA: float32(color.A / 255),
+		ColorR: float32(color.R / 255),
+		ColorG: float32(color.G / 255),
+		ColorB: float32(color.B / 255),
+	}
 }

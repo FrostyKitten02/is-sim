@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
+	"image/color"
 	"log"
 )
 
@@ -22,6 +23,8 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
+	screen.Fill(color.White)
+
 	for _, agent := range *g.state.Agents {
 		agent.Draw(screen)
 	}
@@ -43,7 +46,7 @@ func main() {
 	}
 	game.state.InitGameState()
 
-	ebiten.SetTPS(30)
+	ebiten.SetTPS(60)
 	if err := ebiten.RunGame(game); err != nil {
 		log.Fatal(err)
 	}

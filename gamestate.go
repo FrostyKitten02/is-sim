@@ -16,7 +16,6 @@ type GameState struct {
 
 func (gs *GameState) InitGameState() {
 	gs.maxSpeed = 8
-	//should be between 0 - sqrt(2)
 	gs.maxForce = 0.2
 
 	targetCircle := &Circle{
