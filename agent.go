@@ -46,15 +46,15 @@ func (a *Agent) UpdateLocation(gs *GameState) {
 	}
 
 	if a.Location.X < float32(gs.playAreaOffset) {
-		desiredLimited = Vector{X: float32(gs.maxSpeed), Y: a.Velocity.Y}
+		desiredLimited = MagVec(Vector{X: float32(gs.maxSpeed), Y: a.Velocity.Y}, gs.maxSpeed)
 	} else if a.Location.X > float32(gs.width-gs.playAreaOffset) {
-		desiredLimited = Vector{X: -float32(gs.maxSpeed), Y: a.Velocity.Y}
+		desiredLimited = MagVec(Vector{X: -float32(gs.maxSpeed), Y: a.Velocity.Y}, gs.maxSpeed)
 	}
 
 	if a.Location.Y < float32(gs.playAreaOffset) {
-		desiredLimited = Vector{X: a.Velocity.X, Y: float32(gs.maxSpeed)}
+		desiredLimited = MagVec(Vector{X: a.Velocity.X, Y: float32(gs.maxSpeed)}, gs.maxSpeed)
 	} else if a.Location.Y > float32(gs.height-gs.playAreaOffset) {
-		desiredLimited = Vector{X: a.Velocity.X, Y: -float32(gs.maxSpeed)}
+		desiredLimited = MagVec(Vector{X: a.Velocity.X, Y: -float32(gs.maxSpeed)}, gs.maxSpeed)
 	}
 
 	//steer
