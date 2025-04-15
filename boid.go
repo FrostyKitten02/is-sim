@@ -31,8 +31,8 @@ var boidSecondColor = color.RGBA{
 func (a *Boid) UpdateLocation(gs *GameState) {
 	target := a.wander()
 	a.wrapBorders(gs)
-	a.seek(gs, target)
 	a.update(gs)
+	a.seek(gs, target)
 }
 
 func (a *Boid) update(gs *GameState) {
