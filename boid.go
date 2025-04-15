@@ -33,8 +33,12 @@ func (a *Boid) UpdateLocation(gs *GameState) {
 	a.wrapBorders(gs)
 	a.update(gs)
 	target := a.wander(gs)
-	a.seek(gs, target)
-	a.separate(gs)
+
+	separateForce := a.separate(gs)
+	seekForce := a.seek(gs, target)
+
+	a.ApplyForce(ScaleVec(separateForce, 1.5))
+	a.ApplyForce(ScaleVec(seekForce, 0.5))
 }
 
 func (a *Boid) update(gs *GameState) {
@@ -51,17 +55,17 @@ func (a *Boid) update(gs *GameState) {
 	a.Acceleration.Y = 0
 }
 
-func (a *Boid) seek(gs *GameState, target Vector) {
+func (a *Boid) seek(gs *GameState, target Vector) Vector {
 	desired := SubVectors(target, *a.Location)
 	desiredLimited := MagVec(desired, gs.maxSpeed)
 
 	//steer
 	steer := SubVectors(desiredLimited, *a.Velocity)
 	steerLimited := LimitVec(steer, gs.maxForce)
-	a.ApplyForce(steerLimited)
+	return steerLimited
 }
 
-func (a *Boid) separate(gs *GameState) {
+func (a *Boid) separate(gs *GameState) Vector {
 	separationDist := gs.separationR * 2
 	sum := Vector{
 		X: 0,
@@ -86,13 +90,13 @@ func (a *Boid) separate(gs *GameState) {
 	}
 
 	if count == 0 {
-		return
+		return sum
 	}
-
-	//limiting our sum vec and applying the force
-	limited := MagVec(sum, gs.maxSpeed)
-	separationForce := SubVectors(limited, *a.Velocity)
-	a.ApplyForce(separationForce)
+	//limit and avg our sum vec
+	avg := ScaleVec(sum, 1.0/float64(count))
+	limited := MagVec(avg, gs.maxSpeed)
+	separation := SubVectors(limited, *a.Velocity)
+	return LimitVec(separation, gs.maxForce)
 }
 
 func (a *Boid) wrapBorders(gs *GameState) {
