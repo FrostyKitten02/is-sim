@@ -22,8 +22,8 @@ func (p *Circle) UpdateLocation(gs *GameState) {
 func (p *Circle) Draw(screen *ebiten.Image) {
 	pointColor := color.RGBA{
 		A: 230,
-		R: 255,
-		G: 0,
+		R: 0,
+		G: 255,
 		B: 0,
 	}
 	vector.DrawFilledCircle(screen, p.Location.X, p.Location.Y, 10, pointColor, true)

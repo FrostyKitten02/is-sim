@@ -34,14 +34,25 @@ var secondColor = color.RGBA{
 // TODO check why when updating location and direction on agent values don't get updated out of scope, why are they not reflected in draw call
 func (a *Agent) UpdateLocation(gs *GameState) {
 	desired := SubVectors(*gs.target.Location, *a.Location)
-	desiredLimited := MagVec(desired, float64(gs.maxSpeed))
+	distance := GetVecLen(desired)
 
+	var desiredLimited Vector
+	//arrive
+	minDistance := float64(200)
+	if distance < minDistance {
+		percent := distance / minDistance
+		desiredLimited = MagVec(desired, percent*gs.maxSpeed)
+	} else {
+		desiredLimited = MagVec(desired, gs.maxSpeed)
+	}
+
+	//steer
 	steer := SubVectors(desiredLimited, *a.Velocity)
 	steerLimited := LimitVec(steer, gs.maxForce)
 	a.ApplyForce(steerLimited)
 
-	//TODO update values!! for position!!
-	newVelocity := LimitVec(SumVec(*a.Velocity, *a.Acceleration), float64(gs.maxSpeed))
+	//updating values on agent
+	newVelocity := LimitVec(SumVec(*a.Velocity, *a.Acceleration), gs.maxSpeed)
 	a.Velocity.X = newVelocity.X
 	a.Velocity.Y = newVelocity.Y
 

@@ -11,12 +11,12 @@ type Game struct {
 }
 
 func (g *Game) Update() error {
-	for _, agent := range *g.state.Agents {
-		agent.UpdateLocation(g.state)
-	}
-
 	for _, element := range *g.state.Elements {
 		element.UpdateLocation(g.state)
+	}
+
+	for _, agent := range *g.state.Agents {
+		agent.UpdateLocation(g.state)
 	}
 
 	return nil
@@ -25,12 +25,12 @@ func (g *Game) Update() error {
 func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(color.White)
 
-	for _, agent := range *g.state.Agents {
-		agent.Draw(screen)
-	}
-
 	for _, element := range *g.state.Elements {
 		element.Draw(screen)
+	}
+
+	for _, agent := range *g.state.Agents {
+		agent.Draw(screen)
 	}
 }
 

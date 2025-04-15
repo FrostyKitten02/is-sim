@@ -10,13 +10,13 @@ type GameState struct {
 	Elements *[]Element
 	target   *Circle
 
-	maxSpeed float32
+	maxSpeed float64
 	maxForce float64
 }
 
 func (gs *GameState) InitGameState() {
 	gs.maxSpeed = 8
-	gs.maxForce = 0.2
+	gs.maxForce = 0.05
 
 	targetCircle := &Circle{
 		&Vector{
