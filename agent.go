@@ -38,9 +38,8 @@ func (a *Agent) UpdateLocation(gs *GameState) {
 
 	var desiredLimited Vector
 	//arrive
-	minDistance := float64(200)
-	if distance < minDistance {
-		percent := distance / minDistance
+	if distance < gs.arriveDistance {
+		percent := distance / gs.arriveDistance
 		desiredLimited = MagVec(desired, percent*gs.maxSpeed)
 	} else {
 		desiredLimited = MagVec(desired, gs.maxSpeed)

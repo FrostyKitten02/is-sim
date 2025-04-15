@@ -10,8 +10,9 @@ type GameState struct {
 	Elements *[]Element
 	target   *Circle
 
-	maxSpeed float64
-	maxForce float64
+	maxSpeed       float64
+	maxForce       float64
+	arriveDistance float64
 }
 
 func (gs *GameState) InitGameState() {
