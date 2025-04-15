@@ -30,6 +30,7 @@ func (gs *GameState) InitGameState(width int, height int) {
 	gs.height = float64(height)
 	gs.wanderR = 20
 	gs.wanderD = 80
+	gs.separationR = 12
 
 	targetCircle := &Circle{
 		&Vector{
@@ -60,21 +61,39 @@ func (gs *GameState) InitGameState(width int, height int) {
 		},
 	}
 
-	theta := 0.0
+	theta1 := 0.0
+	theta2 := 0.75
 	gs.Flock = &Flock{
 		[]Boid{
 			{
+				Id: 1,
 				Location: &Vector{
 					X: 400,
 					Y: 400,
 				},
-				WanderTheta: &theta,
+				WanderTheta: &theta1,
 				Acceleration: &Vector{
 					X: 0,
 					Y: 0,
 				},
 				Velocity: &Vector{
+					X: 1,
+					Y: 0,
+				},
+			},
+			{
+				Id: 2,
+				Location: &Vector{
+					X: 400,
+					Y: 410,
+				},
+				WanderTheta: &theta2,
+				Acceleration: &Vector{
 					X: 0,
+					Y: 0,
+				},
+				Velocity: &Vector{
+					X: 1,
 					Y: 0,
 				},
 			},

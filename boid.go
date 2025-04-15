@@ -7,6 +7,7 @@ import (
 )
 
 type Boid struct {
+	Id           uint
 	Location     *Vector
 	Acceleration *Vector
 	Velocity     *Vector
@@ -33,6 +34,7 @@ func (a *Boid) UpdateLocation(gs *GameState) {
 	a.update(gs)
 	target := a.wander(gs)
 	a.seek(gs, target)
+	a.separate(gs)
 }
 
 func (a *Boid) update(gs *GameState) {
@@ -60,7 +62,37 @@ func (a *Boid) seek(gs *GameState, target Vector) {
 }
 
 func (a *Boid) separate(gs *GameState) {
+	separationDist := gs.separationR * 2
+	sum := Vector{
+		X: 0,
+		Y: 0,
+	}
+	count := 0
 
+	for _, boid := range gs.Flock.Boids {
+		if boid.Id == a.Id {
+			continue
+		}
+
+		//important to sub vectors this - other, so we get inverse direction force
+		diff := SubVectors(*a.Location, *boid.Location)
+		dist := GetVecLen(diff)
+		if dist <= separationDist {
+			//inversely proportional to distance
+			vec := MagVec(diff, 1/separationDist)
+			sum = SumVec(sum, vec)
+			count++
+		}
+	}
+
+	if count == 0 {
+		return
+	}
+
+	//limiting our sum vec and applying the force
+	limited := MagVec(sum, gs.maxSpeed)
+	separationForce := SubVectors(limited, *a.Velocity)
+	a.ApplyForce(separationForce)
 }
 
 func (a *Boid) wrapBorders(gs *GameState) {
@@ -82,7 +114,7 @@ func (a *Boid) wrapBorders(gs *GameState) {
 }
 
 func (a *Boid) wander(gs *GameState) Vector {
-	change := 0.3
+	change := 0.5
 
 	*a.WanderTheta = *a.WanderTheta + randomFloat(-change, change)
 	circlePos := MagVec(*a.Velocity, gs.wanderD)
