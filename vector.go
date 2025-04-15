@@ -8,7 +8,7 @@ type Vector struct {
 }
 
 func GetVecLen(v Vector) float64 {
-	return math.Sqrt(float64(v.X*v.X + v.Y*v.Y))
+	return math.Sqrt(v.X*v.X + v.Y*v.Y)
 }
 
 func NormalizeVector(v Vector) Vector {
@@ -68,4 +68,9 @@ func MagVec(v Vector, limit float64) Vector {
 
 	normalized := NormalizeVector(v)
 	return ScaleVec(normalized, limit)
+}
+
+// maybe we need to add pi/2?
+func VecAngle(v1 Vector) float64 {
+	return math.Atan2(v1.Y, v1.X)
 }

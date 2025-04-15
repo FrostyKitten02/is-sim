@@ -20,7 +20,7 @@ type GameState struct {
 }
 
 func (gs *GameState) InitGameState(width int, height int) {
-	gs.maxSpeed = 8
+	gs.maxSpeed = 2
 	gs.maxForce = 0.05
 	gs.arriveDistance = 200
 	gs.playAreaOffset = 100
@@ -52,6 +52,27 @@ func (gs *GameState) InitGameState(width int, height int) {
 			Velocity: &Vector{
 				X: 0,
 				Y: 0,
+			},
+		},
+	}
+
+	theta := 0.0
+	gs.Flock = &Flock{
+		[]Boid{
+			{
+				Location: &Vector{
+					X: 400,
+					Y: 400,
+				},
+				WanderTheta: &theta,
+				Acceleration: &Vector{
+					X: 0,
+					Y: 0,
+				},
+				Velocity: &Vector{
+					X: 0,
+					Y: 0,
+				},
 			},
 		},
 	}

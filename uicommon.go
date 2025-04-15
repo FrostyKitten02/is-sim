@@ -36,7 +36,7 @@ func DrawTriangle(screen *ebiten.Image, location Vector, velocity Vector, mainCo
 	vertices[0] = creteVertex(ver1[0], ver1[1], sin, cos, cx, cy, secondaryColor)
 
 	ver2 := []float64{-size * math.Sin(math.Pi/3), size / 2} // left
-	vertices[1] = creteVertex(ver2[0], ver2[0], sin, cos, cx, cy, mainColor)
+	vertices[1] = creteVertex(ver2[0], ver2[1], sin, cos, cx, cy, mainColor)
 
 	ver3 := []float64{size * math.Sin(math.Pi/3), size / 2} // right
 	vertices[2] = creteVertex(ver3[0], ver3[1], sin, cos, cx, cy, mainColor)
@@ -50,4 +50,24 @@ func DrawTriangle(screen *ebiten.Image, location Vector, velocity Vector, mainCo
 		Filter:    ebiten.FilterNearest,
 		AntiAlias: true,
 	})
+}
+
+// mainly for debugging!!
+func drawLine(screen *ebiten.Image, v1, v2 Vector) {
+	dx := v2.X - v1.X
+	dy := v2.Y - v2.Y
+	length := math.Hypot(dx, dy)
+	angle := math.Atan2(dy, dx)
+
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Scale(length, 1)
+	op.GeoM.Rotate(angle)
+	op.GeoM.Translate(v1.X, v2.Y)
+
+	op.ColorScale.SetB(255)
+	op.ColorScale.SetR(255)
+
+	img := ebiten.NewImage(1, 1)
+
+	screen.DrawImage(img, op)
 }
