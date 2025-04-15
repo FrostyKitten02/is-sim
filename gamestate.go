@@ -19,18 +19,22 @@ type GameState struct {
 	wanderR        float64
 	wanderD        float64
 	separationR    float64
+	alignDistance  float64
+	cohereDistance float64
 }
 
 func (gs *GameState) InitGameState(width int, height int) {
-	gs.maxSpeed = 2
+	gs.maxSpeed = 3
 	gs.maxForce = 0.05
 	gs.arriveDistance = 200
 	gs.playAreaOffset = 100
 	gs.width = float64(width)
 	gs.height = float64(height)
-	gs.wanderR = 20
+	gs.wanderR = 3
 	gs.wanderD = 80
-	gs.separationR = 12
+	gs.separationR = 25
+	gs.alignDistance = 50
+	gs.cohereDistance = 50
 
 	targetCircle := &Circle{
 		&Vector{
@@ -61,42 +65,28 @@ func (gs *GameState) InitGameState(width int, height int) {
 		},
 	}
 
-	theta1 := 0.0
-	theta2 := 0.75
+	boidLen := 20
+	boids := make([]Boid, boidLen)
+	for i := 0; i < boidLen; i++ {
+		theta := 0.3 + float64(i)/float64(boidLen)
+		boids[i] = Boid{
+			Id: uint(i),
+			Location: &Vector{
+				X: 400 + float64(i) + randomFloat(float64(boidLen), 70),
+				Y: 400 + float64(i) + randomFloat(float64(boidLen), 70),
+			},
+			WanderTheta: &theta,
+			Acceleration: &Vector{
+				X: 0,
+				Y: 0,
+			},
+			Velocity: &Vector{
+				X: randomFloat(-2, 2),
+				Y: randomFloat(-2, 2),
+			},
+		}
+	}
 	gs.Flock = &Flock{
-		[]Boid{
-			{
-				Id: 1,
-				Location: &Vector{
-					X: 400,
-					Y: 400,
-				},
-				WanderTheta: &theta1,
-				Acceleration: &Vector{
-					X: 0,
-					Y: 0,
-				},
-				Velocity: &Vector{
-					X: 1,
-					Y: 0,
-				},
-			},
-			{
-				Id: 2,
-				Location: &Vector{
-					X: 400,
-					Y: 410,
-				},
-				WanderTheta: &theta2,
-				Acceleration: &Vector{
-					X: 0,
-					Y: 0,
-				},
-				Velocity: &Vector{
-					X: 1,
-					Y: 0,
-				},
-			},
-		},
+		boids,
 	}
 }
