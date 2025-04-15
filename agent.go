@@ -6,11 +6,6 @@ import (
 	"math"
 )
 
-type Vector struct {
-	X float32
-	Y float32
-}
-
 type Agent struct {
 	Location     *Vector
 	Acceleration *Vector

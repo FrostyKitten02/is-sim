@@ -2,11 +2,9 @@ package main
 
 import "math"
 
-func GetVector(l1 Location, l2 Location) Vector {
-	x := l2.X - l1.X
-	y := l2.Y - l1.Y
-
-	return Vector{x, y}
+type Vector struct {
+	X float32
+	Y float32
 }
 
 func GetVecLen(v Vector) float64 {
