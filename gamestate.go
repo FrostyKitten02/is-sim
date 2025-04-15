@@ -5,11 +5,14 @@ type Flock struct {
 }
 
 type GameState struct {
-	Agents   *[]Agent
+	//all elements
 	Elements *[]Element
-	target   *Circle
-	Flock    *Flock
+	//flock sim
 	Wanderer *Wanderer
+	Flock    *Flock
+	//follow and land
+	Agents *[]Agent
+	target *Circle
 
 	maxSpeed       float64
 	maxForce       float64
@@ -66,11 +69,16 @@ func (gs *GameState) InitGameState(width int, height int) {
 		},
 	}
 
+	//adding agents to elements
+	for _, agent := range *gs.Agents {
+		*gs.Elements = append(*gs.Elements, &agent)
+	}
+
 	boidLen := 100
 	boids := make([]Boid, boidLen)
 	for i := 0; i < boidLen; i++ {
 		theta := 0.3 + float64(i)/float64(boidLen)
-		boids[i] = Boid{
+		boid := &Boid{
 			Id: uint(i),
 			Location: &Vector{
 				X: 400 + float64(i) + randomFloat(float64(boidLen), 70),
@@ -86,6 +94,10 @@ func (gs *GameState) InitGameState(width int, height int) {
 				Y: randomFloat(-2, 2),
 			},
 		}
+		boids[i] = *boid
+
+		//adding boids to elements
+		*gs.Elements = append(*gs.Elements, boid)
 	}
 	gs.Flock = &Flock{
 		boids,
@@ -109,5 +121,5 @@ func (gs *GameState) InitGameState(width int, height int) {
 	}
 
 	el := append(*gs.Elements, gs.Wanderer)
-	gs.Elements = &el
+	*gs.Elements = el
 }
