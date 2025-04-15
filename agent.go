@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"image/color"
-	"math"
 )
 
 type Agent struct {
@@ -40,16 +39,16 @@ func (a *Agent) UpdateLocation(gs *GameState) {
 		desiredLimited = MagVec(desired, gs.maxSpeed)
 	}
 
-	if a.Location.X < float32(gs.playAreaOffset) {
-		desiredLimited = MagVec(Vector{X: float32(gs.maxSpeed), Y: a.Velocity.Y}, gs.maxSpeed)
-	} else if a.Location.X > float32(gs.width-gs.playAreaOffset) {
-		desiredLimited = MagVec(Vector{X: -float32(gs.maxSpeed), Y: a.Velocity.Y}, gs.maxSpeed)
+	if a.Location.X < gs.playAreaOffset {
+		desiredLimited = MagVec(Vector{X: gs.maxSpeed, Y: a.Velocity.Y}, gs.maxSpeed)
+	} else if a.Location.X > gs.width-gs.playAreaOffset {
+		desiredLimited = MagVec(Vector{X: -gs.maxSpeed, Y: a.Velocity.Y}, gs.maxSpeed)
 	}
 
-	if a.Location.Y < float32(gs.playAreaOffset) {
-		desiredLimited = MagVec(Vector{X: a.Velocity.X, Y: float32(gs.maxSpeed)}, gs.maxSpeed)
-	} else if a.Location.Y > float32(gs.height-gs.playAreaOffset) {
-		desiredLimited = MagVec(Vector{X: a.Velocity.X, Y: -float32(gs.maxSpeed)}, gs.maxSpeed)
+	if a.Location.Y < gs.playAreaOffset {
+		desiredLimited = MagVec(Vector{X: a.Velocity.X, Y: gs.maxSpeed}, gs.maxSpeed)
+	} else if a.Location.Y > gs.height-gs.playAreaOffset {
+		desiredLimited = MagVec(Vector{X: a.Velocity.X, Y: -gs.maxSpeed}, gs.maxSpeed)
 	}
 
 	//steer
@@ -77,32 +76,5 @@ func (a *Agent) ApplyForce(force Vector) {
 }
 
 func (a *Agent) Draw(screen *ebiten.Image) {
-	size := float32(12)
-
-	angle := math.Atan2(float64(a.Velocity.Y), float64(a.Velocity.X)) + math.Pi/2
-	cos := float32(math.Cos(angle))
-	sin := float32(math.Sin(angle))
-	cx := a.Location.X
-	cy := a.Location.Y
-
-	vertices := make([]ebiten.Vertex, 3)
-
-	ver1 := Vector{0, -size} // Top
-	vertices[0] = creteVertex(ver1.X, ver1.Y, sin, cos, cx, cy, agentSecondColor)
-
-	ver2 := Vector{-size * float32(math.Sin(math.Pi/3)), size / 2} // left
-	vertices[1] = creteVertex(ver2.X, ver2.Y, sin, cos, cx, cy, agentMainColor)
-
-	ver3 := Vector{size * float32(math.Sin(math.Pi/3)), size / 2} // right
-	vertices[2] = creteVertex(ver3.X, ver3.Y, sin, cos, cx, cy, agentMainColor)
-
-	indices := []uint16{0, 1, 2}
-
-	whiteImg := ebiten.NewImage(1, 1)
-	whiteImg.Fill(color.White)
-
-	screen.DrawTriangles(vertices, indices, whiteImg, &ebiten.DrawTrianglesOptions{
-		Filter:    ebiten.FilterNearest,
-		AntiAlias: true,
-	})
+	DrawTriangle(screen, *a.Location, *a.Velocity, agentMainColor, agentSecondColor)
 }

@@ -39,16 +39,16 @@ func (a *Boid) UpdateLocation(gs *GameState) {
 		desiredLimited = MagVec(desired, gs.maxSpeed)
 	}
 
-	if a.Location.X < float32(gs.playAreaOffset) {
-		desiredLimited = MagVec(Vector{X: float32(gs.maxSpeed), Y: a.Velocity.Y}, gs.maxSpeed)
-	} else if a.Location.X > float32(gs.width-gs.playAreaOffset) {
-		desiredLimited = MagVec(Vector{X: -float32(gs.maxSpeed), Y: a.Velocity.Y}, gs.maxSpeed)
+	if a.Location.X < gs.playAreaOffset {
+		desiredLimited = MagVec(Vector{X: gs.maxSpeed, Y: a.Velocity.Y}, gs.maxSpeed)
+	} else if a.Location.X > gs.width-gs.playAreaOffset {
+		desiredLimited = MagVec(Vector{X: -gs.maxSpeed, Y: a.Velocity.Y}, gs.maxSpeed)
 	}
 
-	if a.Location.Y < float32(gs.playAreaOffset) {
-		desiredLimited = MagVec(Vector{X: a.Velocity.X, Y: float32(gs.maxSpeed)}, gs.maxSpeed)
-	} else if a.Location.Y > float32(gs.height-gs.playAreaOffset) {
-		desiredLimited = MagVec(Vector{X: a.Velocity.X, Y: -float32(gs.maxSpeed)}, gs.maxSpeed)
+	if a.Location.Y < gs.playAreaOffset {
+		desiredLimited = MagVec(Vector{X: a.Velocity.X, Y: gs.maxSpeed}, gs.maxSpeed)
+	} else if a.Location.Y > gs.height-gs.playAreaOffset {
+		desiredLimited = MagVec(Vector{X: a.Velocity.X, Y: -gs.maxSpeed}, gs.maxSpeed)
 	}
 
 	//steer

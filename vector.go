@@ -3,8 +3,8 @@ package main
 import "math"
 
 type Vector struct {
-	X float32
-	Y float32
+	X float64
+	Y float64
 }
 
 func GetVecLen(v Vector) float64 {
@@ -12,7 +12,7 @@ func GetVecLen(v Vector) float64 {
 }
 
 func NormalizeVector(v Vector) Vector {
-	vecLen := float32(GetVecLen(v))
+	vecLen := GetVecLen(v)
 	if vecLen == 0 {
 		return Vector{
 			0, 0,
@@ -43,7 +43,7 @@ func ReversVecDirection(v Vector) Vector {
 	}
 }
 
-func ScaleVec(v Vector, scale float32) Vector {
+func ScaleVec(v Vector, scale float64) Vector {
 	return Vector{
 		X: v.X * scale,
 		Y: v.Y * scale,
@@ -57,7 +57,7 @@ func LimitVec(v Vector, limit float64) Vector {
 	}
 
 	normalized := NormalizeVector(v)
-	return ScaleVec(normalized, float32(limit))
+	return ScaleVec(normalized, limit)
 }
 
 func MagVec(v Vector, limit float64) Vector {
@@ -67,5 +67,5 @@ func MagVec(v Vector, limit float64) Vector {
 	}
 
 	normalized := NormalizeVector(v)
-	return ScaleVec(normalized, float32(limit))
+	return ScaleVec(normalized, limit)
 }

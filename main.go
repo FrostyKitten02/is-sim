@@ -19,6 +19,11 @@ func (g *Game) Update() error {
 		agent.UpdateLocation(g.state)
 	}
 
+	boids := g.state.Flock.Boids
+	for _, boid := range boids {
+		boid.UpdateLocation(g.state)
+	}
+
 	return nil
 }
 
@@ -32,10 +37,15 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	for _, agent := range *g.state.Agents {
 		agent.Draw(screen)
 	}
+
+	boids := g.state.Flock.Boids
+	for _, boid := range boids {
+		boid.Draw(screen)
+	}
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return g.state.width, g.state.height
+	return int(g.state.width), int(g.state.height)
 }
 
 func main() {

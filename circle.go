@@ -14,8 +14,8 @@ func (p *Circle) UpdateLocation(gs *GameState) {
 	//NOT MOVING!
 	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
 		x, y := ebiten.CursorPosition()
-		p.Location.X = float32(x)
-		p.Location.Y = float32(y)
+		p.Location.X = float64(x)
+		p.Location.Y = float64(y)
 	}
 }
 
@@ -26,5 +26,5 @@ func (p *Circle) Draw(screen *ebiten.Image) {
 		G: 255,
 		B: 0,
 	}
-	vector.DrawFilledCircle(screen, p.Location.X, p.Location.Y, 10, pointColor, true)
+	vector.DrawFilledCircle(screen, float32(p.Location.X), float32(p.Location.Y), 10, pointColor, true)
 }
