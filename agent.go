@@ -25,7 +25,6 @@ var agentSecondColor = color.RGBA{
 	B: 0,
 }
 
-// TODO check why when updating location and direction on agent values don't get updated out of scope, why are they not reflected in draw call
 func (a *Agent) UpdateLocation(gs *GameState) {
 	desired := SubVectors(*gs.target.Location, *a.Location)
 	distance := GetVecLen(desired)
@@ -39,6 +38,7 @@ func (a *Agent) UpdateLocation(gs *GameState) {
 		desiredLimited = MagVec(desired, gs.maxSpeed)
 	}
 
+	//area limit
 	if a.Location.X < gs.playAreaOffset {
 		desiredLimited = MagVec(Vector{X: gs.maxSpeed, Y: a.Velocity.Y}, gs.maxSpeed)
 	} else if a.Location.X > gs.width-gs.playAreaOffset {
@@ -53,26 +53,21 @@ func (a *Agent) UpdateLocation(gs *GameState) {
 
 	//steer
 	steer := SubVectors(desiredLimited, *a.Velocity)
+	//in other implementations we use MagVec but for arrive Limit is better
+	//it makes it so our agent doesn't turn in circles
 	steerLimited := LimitVec(steer, gs.maxForce)
 	a.ApplyForce(steerLimited)
 
 	//updating values on agent
-	newVelocity := LimitVec(SumVec(*a.Velocity, *a.Acceleration), gs.maxSpeed)
-	a.Velocity.X = newVelocity.X
-	a.Velocity.Y = newVelocity.Y
-
-	newPosition := SumVec(*a.Location, *a.Velocity)
-	a.Location.X = newPosition.X
-	a.Location.Y = newPosition.Y
+	*a.Velocity = LimitVec(SumVec(*a.Velocity, *a.Acceleration), gs.maxSpeed)
+	*a.Location = SumVec(*a.Location, *a.Velocity)
 
 	a.Acceleration.X = 0
 	a.Acceleration.Y = 0
 }
 
 func (a *Agent) ApplyForce(force Vector) {
-	updated := SumVec(*a.Acceleration, force)
-	a.Acceleration.X = updated.X
-	a.Acceleration.Y = updated.Y
+	*a.Acceleration = SumVec(*a.Acceleration, force)
 }
 
 func (a *Agent) Draw(screen *ebiten.Image) {

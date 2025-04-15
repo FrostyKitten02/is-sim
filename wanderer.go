@@ -34,13 +34,8 @@ func (a *Wanderer) UpdateLocation(gs *GameState) {
 	a.ApplyForce(steerForce)
 
 	//updating values on agent
-	newVelocity := LimitVec(SumVec(*a.Velocity, *a.Acceleration), gs.maxSpeed)
-	a.Velocity.X = newVelocity.X
-	a.Velocity.Y = newVelocity.Y
-
-	newPosition := SumVec(*a.Location, *a.Velocity)
-	a.Location.X = newPosition.X
-	a.Location.Y = newPosition.Y
+	*a.Velocity = LimitVec(SumVec(*a.Velocity, *a.Acceleration), gs.maxSpeed)
+	*a.Location = SumVec(*a.Location, *a.Velocity)
 
 	a.Acceleration.X = 0
 	a.Acceleration.Y = 0
@@ -66,9 +61,7 @@ func (a *Wanderer) wander(gs *GameState) Vector {
 }
 
 func (a *Wanderer) ApplyForce(force Vector) {
-	updated := SumVec(*a.Acceleration, force)
-	a.Acceleration.X = updated.X
-	a.Acceleration.Y = updated.Y
+	*a.Acceleration = SumVec(*a.Acceleration, force)
 }
 
 func (a *Wanderer) Draw(screen *ebiten.Image) {
