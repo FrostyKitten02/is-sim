@@ -3,23 +3,22 @@ package main
 import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"image/color"
-	"math"
 )
 
-type Agent struct {
+type Boid struct {
 	Location     *Vector
 	Acceleration *Vector
 	Velocity     *Vector
 }
 
-var agentMainColor = color.RGBA{
+var boidMainColor = color.RGBA{
 	A: 0, //making invisible tail
 	R: 120,
 	G: 0,
 	B: 0,
 }
 
-var agentSecondColor = color.RGBA{
+var boidSecondColor = color.RGBA{
 	A: 255,
 	R: 255,
 	G: 0,
@@ -27,7 +26,7 @@ var agentSecondColor = color.RGBA{
 }
 
 // TODO check why when updating location and direction on agent values don't get updated out of scope, why are they not reflected in draw call
-func (a *Agent) UpdateLocation(gs *GameState) {
+func (a *Boid) UpdateLocation(gs *GameState) {
 	desired := SubVectors(*gs.target.Location, *a.Location)
 	distance := GetVecLen(desired)
 
@@ -70,39 +69,12 @@ func (a *Agent) UpdateLocation(gs *GameState) {
 	a.Acceleration.Y = 0
 }
 
-func (a *Agent) ApplyForce(force Vector) {
+func (a *Boid) ApplyForce(force Vector) {
 	updated := SumVec(*a.Acceleration, force)
 	a.Acceleration.X = updated.X
 	a.Acceleration.Y = updated.Y
 }
 
-func (a *Agent) Draw(screen *ebiten.Image) {
-	size := float32(12)
-
-	angle := math.Atan2(float64(a.Velocity.Y), float64(a.Velocity.X)) + math.Pi/2
-	cos := float32(math.Cos(angle))
-	sin := float32(math.Sin(angle))
-	cx := a.Location.X
-	cy := a.Location.Y
-
-	vertices := make([]ebiten.Vertex, 3)
-
-	ver1 := Vector{0, -size} // Top
-	vertices[0] = creteVertex(ver1.X, ver1.Y, sin, cos, cx, cy, agentSecondColor)
-
-	ver2 := Vector{-size * float32(math.Sin(math.Pi/3)), size / 2} // left
-	vertices[1] = creteVertex(ver2.X, ver2.Y, sin, cos, cx, cy, agentMainColor)
-
-	ver3 := Vector{size * float32(math.Sin(math.Pi/3)), size / 2} // right
-	vertices[2] = creteVertex(ver3.X, ver3.Y, sin, cos, cx, cy, agentMainColor)
-
-	indices := []uint16{0, 1, 2}
-
-	whiteImg := ebiten.NewImage(1, 1)
-	whiteImg.Fill(color.White)
-
-	screen.DrawTriangles(vertices, indices, whiteImg, &ebiten.DrawTrianglesOptions{
-		Filter:    ebiten.FilterNearest,
-		AntiAlias: true,
-	})
+func (a *Boid) Draw(screen *ebiten.Image) {
+	DrawTriangle(screen, *a.Location, *a.Velocity, boidMainColor, boidSecondColor)
 }
