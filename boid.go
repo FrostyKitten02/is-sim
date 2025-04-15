@@ -29,9 +29,9 @@ var boidSecondColor = color.RGBA{
 
 // TODO check why when updating location and direction on agent values don't get updated out of scope, why are they not reflected in draw call
 func (a *Boid) UpdateLocation(gs *GameState) {
-	target := a.wander()
 	a.wrapBorders(gs)
 	a.update(gs)
+	target := a.wander(gs)
 	a.seek(gs, target)
 }
 
@@ -49,7 +49,6 @@ func (a *Boid) update(gs *GameState) {
 	a.Acceleration.Y = 0
 }
 
-// TODO pass in target!
 func (a *Boid) seek(gs *GameState, target Vector) {
 	desired := SubVectors(target, *a.Location)
 	desiredLimited := MagVec(desired, gs.maxSpeed)
@@ -58,6 +57,10 @@ func (a *Boid) seek(gs *GameState, target Vector) {
 	steer := SubVectors(desiredLimited, *a.Velocity)
 	steerLimited := LimitVec(steer, gs.maxForce)
 	a.ApplyForce(steerLimited)
+}
+
+func (a *Boid) separate(gs *GameState) {
+
 }
 
 func (a *Boid) wrapBorders(gs *GameState) {
@@ -78,23 +81,21 @@ func (a *Boid) wrapBorders(gs *GameState) {
 	}
 }
 
-func (a *Boid) wander() Vector {
-	wanderR := float64(25)
-	wanderD := float64(80)
+func (a *Boid) wander(gs *GameState) Vector {
 	change := 0.3
 
 	*a.WanderTheta = *a.WanderTheta + randomFloat(-change, change)
-	circlePos := MagVec(*a.Velocity, wanderD)
+	circlePos := MagVec(*a.Velocity, gs.wanderD)
 	circlePos = SumVec(circlePos, *a.Location)
 
-	angleOffset := VecAngle(*a.Velocity)
+	directionAngle := VecAngle(*a.Velocity)
 	//creating offset vector for circle
-	circleOffset := Vector{
-		X: wanderR * math.Cos(*a.WanderTheta+angleOffset),
-		Y: wanderR * math.Sin(*a.WanderTheta+angleOffset),
+	newDirection := Vector{
+		X: gs.wanderR * math.Cos(*a.WanderTheta+directionAngle),
+		Y: gs.wanderR * math.Sin(*a.WanderTheta+directionAngle),
 	}
 
-	return SumVec(circlePos, circleOffset)
+	return SumVec(circlePos, newDirection)
 }
 
 func (a *Boid) ApplyForce(force Vector) {

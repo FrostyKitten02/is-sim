@@ -17,6 +17,8 @@ type GameState struct {
 	width          float64
 	height         float64
 	wanderR        float64
+	wanderD        float64
+	separationR    float64
 }
 
 func (gs *GameState) InitGameState(width int, height int) {
@@ -26,6 +28,8 @@ func (gs *GameState) InitGameState(width int, height int) {
 	gs.playAreaOffset = 100
 	gs.width = float64(width)
 	gs.height = float64(height)
+	gs.wanderR = 20
+	gs.wanderD = 80
 
 	targetCircle := &Circle{
 		&Vector{
