@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"image/color"
-	"math"
 )
 
 type Forces struct {
@@ -17,11 +16,11 @@ type Boid struct {
 	Location     *Vector
 	Acceleration *Vector
 	Velocity     *Vector
-	WanderTheta  *float64
+	WanderTheta  *float64 //not used anymore?
 }
 
 var boidMainColor = color.RGBA{
-	A: 0, //making invisible tail
+	A: 120,
 	R: 0,
 	G: 0,
 	B: 120,
@@ -61,13 +60,7 @@ func (a *Boid) update(gs *GameState) {
 }
 
 func (a *Boid) seek(gs *GameState, target Vector) Vector {
-	desired := SubVectors(target, *a.Location)
-	desiredLimited := MagVec(desired, gs.maxSpeed)
-
-	//steer
-	steer := SubVectors(desiredLimited, *a.Velocity)
-	steerLimited := LimitVec(steer, gs.maxForce)
-	return steerLimited
+	return seek(gs, target, *a.Location, *a.Velocity)
 }
 
 func (a *Boid) calcForces(gs *GameState) Forces {
@@ -166,42 +159,7 @@ func (a *Boid) calcForces(gs *GameState) Forces {
 }
 
 func (a *Boid) wrapBorders(gs *GameState) {
-	if a.Location.X < -gs.wanderR {
-		a.Location.X = gs.width + gs.wanderR
-	}
-
-	if a.Location.Y < -gs.wanderR {
-		a.Location.Y = gs.height + gs.wanderR
-	}
-
-	if a.Location.X > gs.width+gs.wanderR {
-		a.Location.X = -gs.wanderR
-	}
-
-	if a.Location.Y > gs.height+gs.wanderR {
-		a.Location.Y = -gs.wanderR
-	}
-}
-
-func (a *Boid) getFuturePos() {
-
-}
-
-func (a *Boid) wander(gs *GameState) Vector {
-	change := 0.5
-
-	*a.WanderTheta = *a.WanderTheta + randomFloat(-change, change)
-	circlePos := MagVec(*a.Velocity, gs.wanderD)
-	circlePos = SumVec(circlePos, *a.Location)
-
-	directionAngle := VecAngle(*a.Velocity)
-	//creating offset vector for circle
-	newDirection := Vector{
-		X: gs.wanderR * math.Cos(*a.WanderTheta+directionAngle),
-		Y: gs.wanderR * math.Sin(*a.WanderTheta+directionAngle),
-	}
-
-	return SumVec(circlePos, newDirection)
+	wrapBorders(gs, a.Location)
 }
 
 func (a *Boid) ApplyForce(force Vector) {

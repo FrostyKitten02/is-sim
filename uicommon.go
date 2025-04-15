@@ -6,23 +6,9 @@ import (
 	"math"
 )
 
-func creteVertex(lx float64, ly float64, sin float64, cos float64, cx float64, cy float64, color color.RGBA) ebiten.Vertex {
-	x := lx*cos - ly*sin + cx
-	y := lx*sin + ly*cos + cy
-
-	return ebiten.Vertex{
-		DstX: float32(x),
-		DstY: float32(y),
-
-		ColorA: float32(color.A / 255),
-		ColorR: float32(color.R / 255),
-		ColorG: float32(color.G / 255),
-		ColorB: float32(color.B / 255),
-	}
-}
-
 func DrawTriangle(screen *ebiten.Image, location Vector, velocity Vector, mainColor color.RGBA, secondaryColor color.RGBA) {
-	size := float64(12)
+	intSize := 12
+	size := float64(intSize)
 
 	angle := math.Atan2(velocity.Y, velocity.X) + math.Pi/2
 	cos := math.Cos(angle)
@@ -50,6 +36,21 @@ func DrawTriangle(screen *ebiten.Image, location Vector, velocity Vector, mainCo
 		Filter:    ebiten.FilterNearest,
 		AntiAlias: true,
 	})
+}
+
+func creteVertex(lx float64, ly float64, sin float64, cos float64, cx float64, cy float64, color color.RGBA) ebiten.Vertex {
+	x := lx*cos - ly*sin + cx
+	y := lx*sin + ly*cos + cy
+
+	return ebiten.Vertex{
+		DstX: float32(x),
+		DstY: float32(y),
+
+		ColorA: float32(color.A) / 255.0,
+		ColorR: float32(color.R) / 255.0,
+		ColorG: float32(color.G) / 255.0,
+		ColorB: float32(color.B) / 255.0,
+	}
 }
 
 // mainly for debugging!!

@@ -12,8 +12,8 @@ type Agent struct {
 }
 
 var agentMainColor = color.RGBA{
-	A: 0, //making invisible tail
-	R: 120,
+	A: 120,
+	R: 255,
 	G: 0,
 	B: 0,
 }

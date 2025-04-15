@@ -9,6 +9,7 @@ type GameState struct {
 	Elements *[]Element
 	target   *Circle
 	Flock    *Flock
+	Wanderer *Wanderer
 
 	maxSpeed       float64
 	maxForce       float64
@@ -89,4 +90,24 @@ func (gs *GameState) InitGameState(width int, height int) {
 	gs.Flock = &Flock{
 		boids,
 	}
+
+	wandererTheta := 0.3 + randomFloat(-0.3, 0.7)
+	gs.Wanderer = &Wanderer{
+		Location: &Vector{
+			X: 600,
+			Y: 600,
+		},
+		Acceleration: &Vector{
+			X: 0,
+			Y: 0,
+		},
+		Velocity: &Vector{
+			X: -1,
+			Y: 0.2,
+		},
+		WanderTheta: &wandererTheta,
+	}
+
+	el := append(*gs.Elements, gs.Wanderer)
+	gs.Elements = &el
 }
