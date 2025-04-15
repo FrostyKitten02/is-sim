@@ -38,7 +38,7 @@ var boidSecondColor = color.RGBA{
 func (a *Boid) UpdateLocation(gs *GameState) {
 	forces := a.calcForces(gs)
 
-	a.ApplyForce(ScaleVec(forces.SeparationForce, 1))
+	a.ApplyForce(ScaleVec(forces.SeparationForce, 1.5))
 	a.ApplyForce(ScaleVec(forces.AlignForce, 1))
 	a.ApplyForce(ScaleVec(forces.CohereForce, 1))
 
@@ -144,7 +144,7 @@ func (a *Boid) calcForces(gs *GameState) Forces {
 			Y: 0,
 		}
 	} else {
-		avg := ScaleVec(velocitySum, 1.0/float64(separationCount))
+		avg := ScaleVec(velocitySum, 1.0/float64(alignCount))
 		limited := MagVec(avg, gs.maxSpeed)
 		alignSteer := SubVectors(limited, *a.Velocity)
 		limitedAlignSteer := LimitVec(alignSteer, gs.maxForce)

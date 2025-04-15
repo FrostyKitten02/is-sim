@@ -24,8 +24,8 @@ type GameState struct {
 }
 
 func (gs *GameState) InitGameState(width int, height int) {
-	gs.maxSpeed = 3
-	gs.maxForce = 0.05
+	gs.maxSpeed = 8
+	gs.maxForce = 0.1
 	gs.arriveDistance = 200
 	gs.playAreaOffset = 100
 	gs.width = float64(width)
@@ -33,8 +33,8 @@ func (gs *GameState) InitGameState(width int, height int) {
 	gs.wanderR = 3
 	gs.wanderD = 80
 	gs.separationR = 25
-	gs.alignDistance = 50
-	gs.cohereDistance = 50
+	gs.alignDistance = 70
+	gs.cohereDistance = 70
 
 	targetCircle := &Circle{
 		&Vector{
@@ -65,7 +65,7 @@ func (gs *GameState) InitGameState(width int, height int) {
 		},
 	}
 
-	boidLen := 20
+	boidLen := 100
 	boids := make([]Boid, boidLen)
 	for i := 0; i < boidLen; i++ {
 		theta := 0.3 + float64(i)/float64(boidLen)
