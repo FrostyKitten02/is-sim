@@ -13,11 +13,18 @@ type GameState struct {
 	maxSpeed       float64
 	maxForce       float64
 	arriveDistance float64
+	playAreaOffset int
+	width          int
+	height         int
 }
 
-func (gs *GameState) InitGameState() {
+func (gs *GameState) InitGameState(width int, height int) {
 	gs.maxSpeed = 8
 	gs.maxForce = 0.05
+	gs.arriveDistance = 200
+	gs.playAreaOffset = 100
+	gs.width = width
+	gs.height = height
 
 	targetCircle := &Circle{
 		&Vector{

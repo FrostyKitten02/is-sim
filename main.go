@@ -35,16 +35,19 @@ func (g *Game) Draw(screen *ebiten.Image) {
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return 1280, 720
+	return g.state.width, g.state.height
 }
 
 func main() {
-	ebiten.SetWindowSize(1280, 720)
+	width := 1280
+	height := 720
+
+	ebiten.SetWindowSize(width, height)
 	ebiten.SetWindowTitle("IS-sim!")
 	game := &Game{
 		state: &GameState{},
 	}
-	game.state.InitGameState()
+	game.state.InitGameState(width, height)
 
 	ebiten.SetTPS(60)
 	if err := ebiten.RunGame(game); err != nil {
