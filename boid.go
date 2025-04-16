@@ -13,24 +13,13 @@ type Forces struct {
 
 type Boid struct {
 	Id           uint
+	FlockName    string
+	mainColor    color.RGBA
+	secondColor  color.RGBA
 	Location     *Vector
 	Acceleration *Vector
 	Velocity     *Vector
 	WanderTheta  *float64 //not used anymore?
-}
-
-var boidMainColor = color.RGBA{
-	A: 120,
-	R: 0,
-	G: 0,
-	B: 120,
-}
-
-var boidSecondColor = color.RGBA{
-	A: 255,
-	R: 0,
-	G: 0,
-	B: 120,
 }
 
 // TODO check why when updating location and direction on agent values don't get updated out of scope, why are they not reflected in draw call
@@ -82,7 +71,8 @@ func (a *Boid) calcForces(gs *GameState) Forces {
 	}
 	cohereCount := 0
 
-	for _, boid := range gs.Flock.Boids {
+	flock := gs.Flocks[a.FlockName]
+	for _, boid := range *flock.Boids {
 		//do we always skip?? should align skip self?
 		if boid.Id == a.Id {
 			continue
@@ -162,5 +152,5 @@ func (a *Boid) ApplyForce(force Vector) {
 }
 
 func (a *Boid) Draw(screen *ebiten.Image) {
-	DrawTriangle(screen, *a.Location, *a.Velocity, boidMainColor, boidSecondColor)
+	DrawTriangle(screen, *a.Location, *a.Velocity, a.mainColor, a.secondColor)
 }
